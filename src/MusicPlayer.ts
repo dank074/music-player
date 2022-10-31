@@ -43,6 +43,11 @@ export class MusicPlayer extends EventEmitter {
         this.emit("paused");
     }
 
+    public resume(): void {
+        this._isPlaying = true;
+        this.emit("playing");
+    }
+
     public stop(): void
     {
         this._isPlaying = false;
