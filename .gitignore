@@ -40,3 +40,7 @@ dist/**/*
 # ignore yarn.lock
 yarn.lock
 package-lock.json
+
+# ignore example public
+example/public/*.js
+example/public/*.js.LICENSE.txt
