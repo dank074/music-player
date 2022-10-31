@@ -78,12 +78,12 @@ export class TraxData
 
     public get hasMetaData(): boolean
     {
-        return this._metaData.get('meta') !== null;
+        return this._metaData.has('meta');
     }
 
     public get metaCutMode(): boolean
     {
-        return this._metaData.get('c') !== null;
+        return this._metaData.has('c');
     }
 
     public get metaTempo(): number | null

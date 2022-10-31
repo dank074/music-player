@@ -27,6 +27,8 @@ export class MusicPlayer extends EventEmitter {
 
     public async play(song: string, startPos: number = 0, playLength: number = -1): Promise<void>
     {
+        this.stop();
+        
         this._currentSong = new TraxData(song);
         this._startPos = startPos;
         this._playLength = playLength;
@@ -41,6 +43,7 @@ export class MusicPlayer extends EventEmitter {
     public pause(): void {
         this._isPlaying = false;
         this.emit("paused");
+        Howler.stop();
     }
 
     public resume(): void {
