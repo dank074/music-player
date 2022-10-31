@@ -23,7 +23,7 @@ export class MusicPlayer {
         this._cache = new Map<number, Howl>();
     }
 
-    public async play(song: string, startPos: number, playLength: number): Promise<void>
+    public async play(song: string, startPos: number = 0, playLength: number = -1): Promise<void>
     {
         this._currentSong = new TraxData(song);
         this._startPos = startPos;
@@ -88,6 +88,9 @@ export class MusicPlayer {
 
             this._sequence.push(sequenceEntryArray);
         }
+
+        if(this._playLength <= 0) this._playLength = Math.max(...this._sequence.map( (value: ISequenceEntry[] ) => value.length))
+        console.log("length:" + this._playLength);
 
         console.log(this._sequence);
     }
