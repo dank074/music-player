@@ -1,7 +1,8 @@
 import { Howl } from "howler";
 import { TraxData } from "./trax/TraxData";
+import { EventEmitter } from 'events';
 
-export class MusicPlayer {
+export class MusicPlayer extends EventEmitter {
     private _currentSong: TraxData | undefined;
     private _startPos: number;
     private _playLength: number;
@@ -14,6 +15,7 @@ export class MusicPlayer {
     private _sequence: ISequenceEntry[][];
 
     constructor(sampleUrl: string) {
+        super();
         this._sampleUrl = sampleUrl;
         this._isPlaying = false;
         this._startPos = 0;
@@ -29,13 +31,16 @@ export class MusicPlayer {
         this._startPos = startPos;
         this._playLength = playLength;
         this._currentPos = startPos;
+        this.emit("loading");
         await this.preload();
         this._isPlaying = true;
+        this.emit("playing");
         this._tickerInterval = window.setInterval(() => this.tick(), 1000);
     }
 
     public pause(): void {
         this._isPlaying = false;
+        this.emit("paused");
     }
 
     public stop(): void
@@ -48,6 +53,7 @@ export class MusicPlayer {
         this._playLength = 0;
         this._sequence = [];
         this._currentPos = 0;
+        this.emit("stopped");
     }
 
     private async preload(): Promise<void>
@@ -132,7 +138,7 @@ export class MusicPlayer {
 
             this._currentPos++;
 
-            if(this._currentPos >= this._playLength)
+            if(this._currentPos > this._playLength)
             {
                 this.stop();
             }

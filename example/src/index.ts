@@ -19,14 +19,30 @@ button.onclick = () => {
 
     if(isPlaying) {
         player.play(songInput.value);
-        statusDiv.innerText = "Playing";
     }
 
     else {
         player.stop();
-        statusDiv.innerText = "Stopped";
     }
 }
+
+player.on("stopped", () => {
+    statusDiv.innerText = "Stopped";
+    isPlaying = false;
+});
+
+player.on("loading", () => {
+    statusDiv.innerText = "Loading";
+});
+
+player.on("playing", () => {
+    statusDiv.innerText = "Playing";
+});
+
+player.on("paused", () => {
+    statusDiv.innerText = "Paused";
+})
+
 container.append(statusDiv);
 container.append(songInput);
 container.append(button);
