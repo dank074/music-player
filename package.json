@@ -1,0 +1,34 @@
+{
+  "name": "@dank074/music-player",
+  "version": "1.0.0",
+  "description": "Plays habbo music",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dank074/music-player.git"
+  },
+  "author": "dank074",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dank074/music-player/issues"
+  },
+  "homepage": "https://github.com/dank074/music-player#readme",
+  "dependencies": {
+    "howler": "^2.2.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4",
+    "@types/howler": "^2.2.7"
+  }
+}
