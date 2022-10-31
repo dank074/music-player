@@ -168,6 +168,7 @@ export class MusicPlayer extends EventEmitter {
                         console.log(sampleAudio);
                         sampleAudio.play();
                     }
+                    // code below is wrong. Need to keep track of id of current playing one
                     else if(!sampleAudio.playing())
                     {
                         sampleAudio.seek(entry.position);
