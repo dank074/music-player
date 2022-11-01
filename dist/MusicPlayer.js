@@ -148,18 +148,22 @@ export class MusicPlayer extends EventEmitter {
         if (this._currentSong && this._sequence) {
             for (const sequencyEntry of this._sequence) {
                 const entry = sequencyEntry[pos];
-                if (!!entry && entry.sampleId !== -1) {
-                    const sampleAudio = this._cache.get(entry.sampleId);
-                    if (!sampleAudio)
-                        return;
-                    if (entry.position === 0) {
-                        sampleAudio.play();
-                    }
-                    // code below is wrong. Need to keep track of id of current playing one
-                    else if (!sampleAudio.playing()) {
-                        sampleAudio.seek(entry.position);
-                        sampleAudio.play();
-                    }
+                if (!entry)
+                    continue;
+                // sample -1 is play none
+                // sample 0 is 1 second of empty noise
+                if (entry.sampleId === -1 || entry.sampleId === 0)
+                    continue;
+                const sampleAudio = this._cache.get(entry.sampleId);
+                if (!sampleAudio)
+                    continue;
+                if (entry.position === 0) {
+                    sampleAudio.play();
+                }
+                // code below is wrong. Need to keep track of id of current playing one
+                else if (!sampleAudio.playing()) {
+                    sampleAudio.seek(entry.position);
+                    sampleAudio.play();
                 }
             }
         }
