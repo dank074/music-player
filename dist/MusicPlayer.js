@@ -67,9 +67,7 @@ export class MusicPlayer extends EventEmitter {
                     if (!sampleSound) {
                         sampleSound = yield this.loadSong(sample.id);
                     }
-                    console.log(`Preloading ${sample.id}: duration: ${sampleSound.duration()} lenght: ${sample.length}`);
                     const repeat = Math.ceil((sample.length * 2) / Math.ceil(sampleSound.duration()));
-                    console.log(repeat);
                     for (let i = 0; i < repeat; i++) {
                         const entry = { sampleId: sample.id, position: 0 };
                         sequenceEntryArray.push(entry);
@@ -83,8 +81,6 @@ export class MusicPlayer extends EventEmitter {
             }
             if (this._playLength <= 0)
                 this._playLength = Math.max(...this._sequence.map((value) => value.length));
-            console.log("length:" + this._playLength);
-            console.log(this._sequence);
         });
     }
     loadSong(songId) {
@@ -96,7 +92,6 @@ export class MusicPlayer extends EventEmitter {
                 });
                 sample.once('load', () => {
                     this._cache.set(songId, sample);
-                    console.log('loaded sample ' + songId);
                     resolve(sample);
                 });
                 sample.once('loaderror', () => {
@@ -108,8 +103,8 @@ export class MusicPlayer extends EventEmitter {
     }
     tick() {
         if (this._isPlaying) {
-            console.log(this._currentPos);
             if (this._currentSong) {
+                this.emit("time", this._currentPos);
                 this.playPosition(this._currentPos);
             }
             this._currentPos++;
@@ -127,7 +122,6 @@ export class MusicPlayer extends EventEmitter {
                     if (!sampleAudio)
                         return;
                     if (entry.position === 0) {
-                        console.log(sampleAudio);
                         sampleAudio.play();
                     }
                     // code below is wrong. Need to keep track of id of current playing one

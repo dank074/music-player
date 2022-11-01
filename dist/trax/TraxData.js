@@ -47,10 +47,10 @@ export class TraxData {
         return ids;
     }
     get hasMetaData() {
-        return this._metaData.get('meta') !== null;
+        return this._metaData.has('meta');
     }
     get metaCutMode() {
-        return this._metaData.get('c') !== null;
+        return this._metaData.has('c');
     }
     get metaTempo() {
         const tempo = this._metaData.get('t');
