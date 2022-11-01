@@ -14,6 +14,8 @@ export declare class MusicPlayer extends EventEmitter {
     play(song: string, startPos?: number, playLength?: number): Promise<void>;
     pause(): void;
     resume(): void;
+    stop(): void;
+    private reset;
     /**
      * Sets global howler volume for all sounds
      * @param volume value from 0.0 to 1.0
@@ -30,7 +32,6 @@ export declare class MusicPlayer extends EventEmitter {
      * @returns howl sound object
      */
     getSample(id: number): Promise<Howl>;
-    stop(): void;
     private preload;
     private loadSong;
     private tick;

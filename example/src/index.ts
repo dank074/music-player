@@ -14,6 +14,8 @@ const stopButton = document.createElement("button");
 // 2 - paused
 let status = 0;
 
+let totalTime = 0;
+
 statusDiv.innerText = "Stopped"
 button.innerHTML = "Play/Pause";
 stopButton.innerHTML = "Stop";
@@ -47,9 +49,10 @@ player.on("loading", () => {
     statusDiv.innerText = "Loading";
 });
 
-player.on("playing", () => {
+player.on("playing", (curr, total) => {
     status = 1;
-    statusDiv.innerText = "Playing";
+    totalTime = total;
+    statusDiv.innerText = `Playing ${curr}/${totalTime}`;
 });
 
 player.on("paused", () => {
@@ -59,6 +62,7 @@ player.on("paused", () => {
 
 player.on("time", (pos) => {
     console.log(pos);
+    statusDiv.innerText = `Playing ${pos}/${totalTime}`;
 });
 
 container.append(statusDiv);

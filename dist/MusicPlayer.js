@@ -23,7 +23,7 @@ export class MusicPlayer extends EventEmitter {
     }
     play(song, startPos = 0, playLength = -1) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.stop();
+            this.reset();
             this._currentSong = new TraxData(song);
             this._startPos = startPos;
             this._playLength = playLength;
@@ -31,7 +31,7 @@ export class MusicPlayer extends EventEmitter {
             this.emit("loading");
             yield this.preload();
             this._isPlaying = true;
-            this.emit("playing");
+            this.emit("playing", this._currentPos, this._playLength - 1);
             this._tickerInterval = window.setInterval(() => this.tick(), 1000);
         });
     }
@@ -42,7 +42,21 @@ export class MusicPlayer extends EventEmitter {
     }
     resume() {
         this._isPlaying = true;
-        this.emit("playing");
+        this.emit("playing", this._currentPos, this._playLength - 1);
+    }
+    stop() {
+        this.reset();
+        this.emit("stopped");
+    }
+    reset() {
+        this._isPlaying = false;
+        clearInterval(this._tickerInterval);
+        Howler.stop();
+        this._currentSong = undefined;
+        this._startPos = 0;
+        this._playLength = 0;
+        this._sequence = [];
+        this._currentPos = 0;
     }
     /**
      * Sets global howler volume for all sounds
@@ -70,17 +84,6 @@ export class MusicPlayer extends EventEmitter {
                 sample = yield this.loadSong(id);
             return Promise.resolve(sample);
         });
-    }
-    stop() {
-        this._isPlaying = false;
-        clearInterval(this._tickerInterval);
-        Howler.stop();
-        this._currentSong = undefined;
-        this._startPos = 0;
-        this._playLength = 0;
-        this._sequence = [];
-        this._currentPos = 0;
-        this.emit("stopped");
     }
     preload() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -130,6 +133,7 @@ export class MusicPlayer extends EventEmitter {
     }
     tick() {
         if (this._currentPos > this._playLength - 1) {
+            this.emit("songended");
             this.stop();
         }
         if (this._isPlaying) {

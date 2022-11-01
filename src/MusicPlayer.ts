@@ -27,7 +27,7 @@ export class MusicPlayer extends EventEmitter {
 
     public async play(song: string, startPos: number = 0, playLength: number = -1): Promise<void>
     {
-        this.stop();
+        this.reset();
         
         this._currentSong = new TraxData(song);
         this._startPos = startPos;
@@ -36,7 +36,7 @@ export class MusicPlayer extends EventEmitter {
         this.emit("loading");
         await this.preload();
         this._isPlaying = true;
-        this.emit("playing");
+        this.emit("playing", this._currentPos, this._playLength - 1);
         this._tickerInterval = window.setInterval(() => this.tick(), 1000);
     }
 
@@ -48,7 +48,25 @@ export class MusicPlayer extends EventEmitter {
 
     public resume(): void {
         this._isPlaying = true;
-        this.emit("playing");
+        this.emit("playing", this._currentPos, this._playLength - 1 );
+    }
+
+    public stop(): void
+    {
+        this.reset();
+        this.emit("stopped");
+    }
+
+    private reset(): void
+    {
+        this._isPlaying = false;
+        clearInterval(this._tickerInterval);
+        Howler.stop();
+        this._currentSong = undefined;
+        this._startPos = 0;
+        this._playLength = 0;
+        this._sequence = [];
+        this._currentPos = 0;
     }
 
     /**
@@ -78,19 +96,6 @@ export class MusicPlayer extends EventEmitter {
         if(!sample) sample = await this.loadSong(id);
 
         return Promise.resolve(sample);
-    }
-
-    public stop(): void
-    {
-        this._isPlaying = false;
-        clearInterval(this._tickerInterval);
-        Howler.stop();
-        this._currentSong = undefined;
-        this._startPos = 0;
-        this._playLength = 0;
-        this._sequence = [];
-        this._currentPos = 0;
-        this.emit("stopped");
     }
 
     private async preload(): Promise<void>
@@ -160,6 +165,7 @@ export class MusicPlayer extends EventEmitter {
     {
         if(this._currentPos > this._playLength - 1)
         {
+            this.emit("songended")
             this.stop();
         }
 
