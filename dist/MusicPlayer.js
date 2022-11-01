@@ -44,6 +44,33 @@ export class MusicPlayer extends EventEmitter {
         this._isPlaying = true;
         this.emit("playing");
     }
+    /**
+     * Sets global howler volume for all sounds
+     * @param volume value from 0.0 to 1.0
+     */
+    setVolume(volume) {
+        Howler.volume(volume);
+    }
+    /**
+     * Gets global howler volume for all sounds
+     * @returns value from 0.0 to 1.0
+     */
+    getVolume() {
+        return Howler.volume();
+    }
+    /**
+     * Gets sample from cache or loads it if not in cache
+     * @param id sample id
+     * @returns howl sound object
+     */
+    getSample(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let sample = this._cache.get(id);
+            if (!sample)
+                sample = yield this.loadSong(id);
+            return Promise.resolve(sample);
+        });
+    }
     stop() {
         this._isPlaying = false;
         clearInterval(this._tickerInterval);

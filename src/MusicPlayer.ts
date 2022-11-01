@@ -51,6 +51,35 @@ export class MusicPlayer extends EventEmitter {
         this.emit("playing");
     }
 
+    /**
+     * Sets global howler volume for all sounds
+     * @param volume value from 0.0 to 1.0
+     */
+    public setVolume(volume: number): void {
+        Howler.volume(volume);
+    }
+
+    /**
+     * Gets global howler volume for all sounds
+     * @returns value from 0.0 to 1.0
+     */
+    public getVolume(): number {
+        return Howler.volume();
+    }
+
+    /**
+     * Gets sample from cache or loads it if not in cache
+     * @param id sample id
+     * @returns howl sound object
+     */
+    public async getSample(id: number): Promise<Howl> {
+        let sample =  this._cache.get(id);
+
+        if(!sample) sample = await this.loadSong(id);
+
+        return Promise.resolve(sample);
+    }
+
     public stop(): void
     {
         this._isPlaying = false;
@@ -103,7 +132,7 @@ export class MusicPlayer extends EventEmitter {
         if(this._playLength <= 0) this._playLength = Math.max(...this._sequence.map( (value: ISequenceEntry[] ) => value.length))
     }
 
-    public async loadSong(songId: number): Promise<Howl>
+    private async loadSong(songId: number): Promise<Howl>
     {
         return new Promise <Howl>((resolve, reject) =>
         {
@@ -133,7 +162,7 @@ export class MusicPlayer extends EventEmitter {
         {
             this.stop();
         }
-        
+
         if(this._isPlaying)
         {
             if(this._currentSong)

@@ -14,9 +14,25 @@ export declare class MusicPlayer extends EventEmitter {
     play(song: string, startPos?: number, playLength?: number): Promise<void>;
     pause(): void;
     resume(): void;
+    /**
+     * Sets global howler volume for all sounds
+     * @param volume value from 0.0 to 1.0
+     */
+    setVolume(volume: number): void;
+    /**
+     * Gets global howler volume for all sounds
+     * @returns value from 0.0 to 1.0
+     */
+    getVolume(): number;
+    /**
+     * Gets sample from cache or loads it if not in cache
+     * @param id sample id
+     * @returns howl sound object
+     */
+    getSample(id: number): Promise<Howl>;
     stop(): void;
     private preload;
-    loadSong(songId: number): Promise<Howl>;
+    private loadSong;
     private tick;
     private playPosition;
 }

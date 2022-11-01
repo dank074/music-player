@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "tsc",
     "test": "test"
   },
   "repository": {
