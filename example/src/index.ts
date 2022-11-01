@@ -39,6 +39,7 @@ stopButton.onclick = () => {
 player.on("stopped", () => {
     status = 0;
     statusDiv.innerText = "Stopped";
+    console.log("stopped")
 });
 
 player.on("loading", () => {
@@ -54,7 +55,11 @@ player.on("playing", () => {
 player.on("paused", () => {
     status = 2;
     statusDiv.innerText = "Paused";
-})
+});
+
+player.on("time", (pos) => {
+    console.log(pos);
+});
 
 container.append(statusDiv);
 container.append(songInput);

@@ -102,15 +102,15 @@ export class MusicPlayer extends EventEmitter {
         });
     }
     tick() {
+        if (this._currentPos > this._playLength - 1) {
+            this.stop();
+        }
         if (this._isPlaying) {
             if (this._currentSong) {
                 this.emit("time", this._currentPos);
                 this.playPosition(this._currentPos);
             }
             this._currentPos++;
-            if (this._currentPos > this._playLength) {
-                this.stop();
-            }
         }
     }
     playPosition(pos) {

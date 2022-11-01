@@ -129,6 +129,11 @@ export class MusicPlayer extends EventEmitter {
 
     private tick(): void
     {
+        if(this._currentPos > this._playLength - 1)
+        {
+            this.stop();
+        }
+        
         if(this._isPlaying)
         {
             if(this._currentSong)
@@ -138,11 +143,6 @@ export class MusicPlayer extends EventEmitter {
             }
 
             this._currentPos++;
-
-            if(this._currentPos > this._playLength)
-            {
-                this.stop();
-            }
         }
     }
 
