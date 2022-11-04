@@ -93,17 +93,12 @@ export class MusicPlayer extends EventEmitter {
             for (const channel of this._currentSong.channels) {
                 const sequenceEntryArray = [];
                 for (const sample of channel.items) {
-                    let sampleSound = this._cache.get(sample.id);
-                    if (!sampleSound) {
-                        sampleSound = yield this.loadSong(sample.id);
-                    }
+                    const sampleSound = yield this.getSample(sample.id);
                     const repeat = Math.ceil((sample.length * 2) / Math.ceil(sampleSound.duration()));
                     for (let i = 0; i < repeat; i++) {
-                        const entry = { sampleId: sample.id, position: 0 };
-                        sequenceEntryArray.push(entry);
-                        for (let l = 0; l < (Math.ceil(sampleSound.duration()) - 1); l++) {
-                            const entry = { sampleId: sample.id, position: l + 1 };
-                            sequenceEntryArray.push(entry);
+                        sequenceEntryArray.push({ sampleId: sample.id, position: 0 });
+                        for (let l = 1; l < Math.ceil(sampleSound.duration()); l++) {
+                            sequenceEntryArray.push({ sampleId: sample.id, position: l });
                         }
                     }
                 }
