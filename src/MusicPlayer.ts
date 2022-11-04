@@ -42,7 +42,7 @@ export class MusicPlayer extends EventEmitter {
 
     public pause(): void {
         this._isPlaying = false;
-        this.emit("paused");
+        this.emit("paused", this._currentPos);
         Howler.stop();
     }
 
