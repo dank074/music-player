@@ -111,15 +111,13 @@ export class MusicPlayer extends EventEmitter {
             {
                 const sampleSound = await this.getSample(sample.id);
 
-                const repeat = Math.ceil( (sample.length * 2) / Math.ceil(sampleSound.duration()));
+                const sampleCount = Math.ceil( (sample.length * 2) / Math.ceil(sampleSound.duration()));
 
-                for(let i = 0; i < repeat; i++)
+                for(let i = 0; i < sampleCount; i++)
                 {
-                    sequenceEntryArray.push({ sampleId: sample.id, position: 0 });
-
-                    for(let l = 1; l < Math.ceil(sampleSound.duration()); l++)
+                    for(let j = 0; j < Math.ceil(sampleSound.duration()); j++)
                     {
-                        sequenceEntryArray.push({ sampleId: sample.id, position: l });
+                        sequenceEntryArray.push({ sampleId: sample.id, position: j });
                     }
                 }
             }
