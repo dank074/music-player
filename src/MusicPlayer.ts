@@ -37,6 +37,7 @@ export class MusicPlayer extends EventEmitter {
         await this.preload();
         this._isPlaying = true;
         this.emit("playing", this._currentPos, this._playLength - 1);
+        this.tick(); // to evade initial 1 sec delay
         this._tickerInterval = window.setInterval(() => this.tick(), 1000);
     }
 
@@ -117,7 +118,7 @@ export class MusicPlayer extends EventEmitter {
                 {
                     for(let j = 0; j < Math.ceil(sampleSound.duration()); j++)
                     {
-                        sequenceEntryArray.push({ sampleId: sample.id, position: j });
+                        sequenceEntryArray.push({ sampleId: sample.id, offset: j });
                     }
                 }
             }
@@ -174,32 +175,30 @@ export class MusicPlayer extends EventEmitter {
 
     private playPosition(pos: number): void
     {
-        if(this._currentSong && this._sequence)
+        if(!this._currentSong || !this._sequence) return;
+
+        for(const sequencyEntry of this._sequence)
         {
-            for(const sequencyEntry of this._sequence)
+            const entry = sequencyEntry[pos];
+
+            if(!entry) continue;
+
+            // sample -1 is play none
+            // sample 0 is 1 second of empty noise
+            if(entry.sampleId === -1 || entry.sampleId === 0) continue;
+
+            const sampleAudio = this._cache.get(entry.sampleId);
+
+            if(!sampleAudio) continue;
+
+            if(entry.offset === 0)
             {
-                const entry = sequencyEntry[pos];
-
-                if(!entry) continue;
-
-                // sample -1 is play none
-                // sample 0 is 1 second of empty noise
-                if(entry.sampleId === -1 || entry.sampleId === 0) continue;
-
-                const sampleAudio = this._cache.get(entry.sampleId);
-
-                if(!sampleAudio) continue;
-
-                if(entry.position === 0)
-                {
-                    sampleAudio.play();
-                }
-                // code below is wrong. Need to keep track of id of current playing one
-                else if(!sampleAudio.playing())
-                {
-                    sampleAudio.seek(entry.position);
-                    sampleAudio.play();
-                }
+                sampleAudio.play();
+            }
+            else if(!sampleAudio.playing())
+            {
+                sampleAudio.seek(entry.offset);
+                sampleAudio.play();
             }
         }
     }
@@ -209,5 +208,5 @@ export class MusicPlayer extends EventEmitter {
 interface ISequenceEntry
 {
     sampleId: number;
-    position: number;
+    offset: number;
 }
