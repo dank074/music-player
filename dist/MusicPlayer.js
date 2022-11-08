@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 import { TraxData } from "./trax/TraxData";
 import { EventEmitter } from 'events';
 export class MusicPlayer extends EventEmitter {
@@ -25,9 +25,9 @@ export class MusicPlayer extends EventEmitter {
         return __awaiter(this, void 0, void 0, function* () {
             this.reset();
             this._currentSong = new TraxData(song);
-            this._startPos = startPos;
-            this._playLength = playLength;
-            this._currentPos = startPos;
+            this._startPos = Math.trunc(startPos);
+            this._playLength = Math.trunc(playLength);
+            this._currentPos = this._startPos;
             this.emit("loading");
             yield this.preload();
             this._isPlaying = true;
