@@ -1,4 +1,4 @@
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 import { TraxData } from "./trax/TraxData";
 import { EventEmitter } from 'events';
 
@@ -30,9 +30,9 @@ export class MusicPlayer extends EventEmitter {
         this.reset();
         
         this._currentSong = new TraxData(song);
-        this._startPos = startPos;
-        this._playLength = playLength;
-        this._currentPos = startPos;
+        this._startPos = Math.trunc(startPos);
+        this._playLength = Math.trunc(playLength);
+        this._currentPos = this._startPos;
         this.emit("loading");
         await this.preload();
         this._isPlaying = true;
