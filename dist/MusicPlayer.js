@@ -91,6 +91,8 @@ export class MusicPlayer extends EventEmitter {
             this._sequence = [];
             if (!this._currentSong)
                 return;
+            // for faster loading
+            yield Promise.all(this._currentSong.getSampleIds().map(id => this.getSample(id)));
             for (const channel of this._currentSong.channels) {
                 const sequenceEntryArray = [];
                 for (const sample of channel.items) {
@@ -104,8 +106,11 @@ export class MusicPlayer extends EventEmitter {
                 }
                 this._sequence.push(sequenceEntryArray);
             }
+            const songLength = Math.max(...this._sequence.map((value) => value.length));
             if (this._playLength <= 0)
-                this._playLength = Math.max(...this._sequence.map((value) => value.length));
+                this._playLength = songLength;
+            else
+                this._playLength = Math.min(this._playLength, songLength);
         });
     }
     loadSong(songId) {

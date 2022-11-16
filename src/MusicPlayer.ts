@@ -105,6 +105,9 @@ export class MusicPlayer extends EventEmitter {
 
         if(!this._currentSong) return;
 
+        // for faster loading
+        await Promise.all(this._currentSong.getSampleIds().map(id => this.getSample(id)));
+
         for(const channel of this._currentSong.channels)
         {
             const sequenceEntryArray: ISequenceEntry[] = [];
@@ -126,7 +129,10 @@ export class MusicPlayer extends EventEmitter {
             this._sequence.push(sequenceEntryArray);
         }
 
-        if(this._playLength <= 0) this._playLength = Math.max(...this._sequence.map( (value: ISequenceEntry[] ) => value.length))
+        const songLength = Math.max(...this._sequence.map( (value: ISequenceEntry[] ) => value.length));
+        
+        if(this._playLength <= 0) this._playLength = songLength;
+        else this._playLength = Math.min(this._playLength, songLength);
     }
 
     private async loadSong(songId: number): Promise<Howl>
