@@ -2,6 +2,39 @@ import { Howl, Howler } from "howler";
 import { TraxData } from "./trax/TraxData";
 import { EventEmitter } from 'events';
 
+export interface MusicPlayer extends EventEmitter {
+    /**
+     * Emitted when the music player starts playing
+     * @eventProperty 
+     */
+    on(event: 'playing', listener: (currentTime: number, totalTime: number) => void): this;
+    /**
+     * Emitted when the music player stops playing
+     * @eventProperty 
+     */
+    on(event: 'stopped', listener: () => void): this;
+    /**
+     * Emitted when the music player is paused
+     * @eventProperty 
+     */
+    on(event: 'paused', listener: () => void): this;
+    /**
+     * Emitted when the music player is loading sounds
+     * @eventProperty 
+     */
+    on(event: 'loading', listener: () => void): this;
+    /**
+     * Emitted when the music player is playing at time <@param time>
+     * @eventProperty 
+     */
+    on(event: 'time', listener: (time: number) => void): this;
+    /**
+     * Emitted when the current song playing ends
+     * @eventProperty 
+     */
+    on(event: 'songended', listener: () => void): this;
+}
+
 export class MusicPlayer extends EventEmitter {
     private _currentSong: TraxData | undefined;
     private _startPos: number;

@@ -1,5 +1,37 @@
 import { Howl } from "howler";
 import { EventEmitter } from 'events';
+export interface MusicPlayer extends EventEmitter {
+    /**
+     * Emitted when the music player starts playing
+     * @eventProperty
+     */
+    on(event: 'playing', listener: (currentTime: number, totalTime: number) => void): this;
+    /**
+     * Emitted when the music player stops playing
+     * @eventProperty
+     */
+    on(event: 'stopped', listener: () => void): this;
+    /**
+     * Emitted when the music player is paused
+     * @eventProperty
+     */
+    on(event: 'paused', listener: () => void): this;
+    /**
+     * Emitted when the music player is loading sounds
+     * @eventProperty
+     */
+    on(event: 'loading', listener: () => void): this;
+    /**
+     * Emitted when the music player is playing at time <@param time>
+     * @eventProperty
+     */
+    on(event: 'time', listener: (time: number) => void): this;
+    /**
+     * Emitted when the current song playing ends
+     * @eventProperty
+     */
+    on(event: 'songended', listener: () => void): this;
+}
 export declare class MusicPlayer extends EventEmitter {
     private _currentSong;
     private _startPos;
